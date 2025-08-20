@@ -4,31 +4,36 @@ using Azure.Data.Tables;
 
 namespace TrilhaNetAzureDesafio.Models
 {
-    public class FuncionarioLog : Funcionario, ITableEntity
+    public class FuncionarioLog
     {
-        public FuncionarioLog() { }
-
-        public FuncionarioLog(Funcionario funcionario, TipoAcao tipoAcao, string partitionKey, string rowKey)
-        {
-            base.Id = funcionario.Id;
-            base.Nome = funcionario.Nome;
-            base.Endereco = funcionario.Endereco;
-            base.Ramal = funcionario.Ramal;
-            base.EmailProfissional = funcionario.EmailProfissional;
-            base.Departamento = funcionario.Departamento;
-            base.Salario = funcionario.Salario;
-            base.DataAdmissao = funcionario.DataAdmissao;
-            TipoAcao = tipoAcao;
-            JSON = JsonSerializer.Serialize(funcionario);
-            PartitionKey = partitionKey;
-            RowKey = rowKey;
-        }
-
+    [System.ComponentModel.DataAnnotations.Key]
+    public int LogId { get; set; } // Chave primária
+        public int FuncionarioId { get; set; }
+    public string Nome { get; set; }
+    public string Endereco { get; set; }
+    public string Ramal { get; set; }
+    public string EmailProfissional { get; set; }
+    public string Departamento { get; set; }
+    public decimal Salario { get; set; }
+    public DateTimeOffset? DataAdmissao { get; set; }
         public TipoAcao TipoAcao { get; set; }
         public string JSON { get; set; }
-        public string PartitionKey { get; set; }
-        public string RowKey { get; set; }
-        public DateTimeOffset? Timestamp { get; set; }
-        public ETag ETag { get; set; }
+        public DateTime DataLog { get; set; } = DateTime.Now;
+
+        public FuncionarioLog() { }
+
+        public FuncionarioLog(Funcionario funcionario, TipoAcao tipoAcao)
+        {
+            FuncionarioId = funcionario.Id;
+            Nome = funcionario.Nome;
+            Endereco = funcionario.Endereco;
+            Ramal = funcionario.Ramal;
+            EmailProfissional = funcionario.EmailProfissional;
+            Departamento = funcionario.Departamento;
+            Salario = funcionario.Salario;
+            DataAdmissao = funcionario.DataAdmissao;
+            TipoAcao = tipoAcao;
+            JSON = JsonSerializer.Serialize(funcionario);
+        }
     }
 }

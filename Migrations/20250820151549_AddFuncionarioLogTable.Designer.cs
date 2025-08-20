@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TrilhaNetAzureDesafio.Context;
 
@@ -11,9 +12,10 @@ using TrilhaNetAzureDesafio.Context;
 namespace trilha_net_azure_desafio.Migrations
 {
     [DbContext(typeof(RHContext))]
-    partial class RHContextModelSnapshot : ModelSnapshot
+    [Migration("20250820151549_AddFuncionarioLogTable")]
+    partial class AddFuncionarioLogTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,6 +38,10 @@ namespace trilha_net_azure_desafio.Migrations
                     b.Property<string>("Departamento")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("EmailProfissional")
                         .HasColumnType("nvarchar(max)");
 
@@ -54,52 +60,27 @@ namespace trilha_net_azure_desafio.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Funcionarios");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("Funcionario");
                 });
 
             modelBuilder.Entity("TrilhaNetAzureDesafio.Models.FuncionarioLog", b =>
                 {
-                    b.Property<int>("LogId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LogId"), 1L, 1);
-
-                    b.Property<DateTimeOffset?>("DataAdmissao")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<DateTime>("DataLog")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Departamento")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("EmailProfissional")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Endereco")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("FuncionarioId")
-                        .HasColumnType("int");
+                    b.HasBaseType("TrilhaNetAzureDesafio.Models.Funcionario");
 
                     b.Property<string>("JSON")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Nome")
+                    b.Property<string>("PartitionKey")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Ramal")
+                    b.Property<string>("RowKey")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Salario")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("TipoAcao")
                         .HasColumnType("int");
 
-                    b.HasKey("LogId");
-
-                    b.ToTable("FuncionarioLogs");
+                    b.HasDiscriminator().HasValue("FuncionarioLog");
                 });
 #pragma warning restore 612, 618
         }
